@@ -1,0 +1,15 @@
+{
+  "name": "factorial-calculator-tests",
+  "version": "1.0.0",
+  "description": "Playwright automation tests for the Factorial Calculator application — BitCube QA Assessment",
+  "scripts": {
+    "test": "playwright test",
+    "test:main": "playwright test tests/factorial.spec.js",
+    "test:part4": "playwright test tests/part4/additional.spec.js",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0"
+  }
+}
