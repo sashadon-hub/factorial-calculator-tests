@@ -21,31 +21,34 @@ npm run report         # open HTML report
 
 ## My Approach
 
-I started with manual exploratory testing before writing any automation. That is how i caught the swapped footer links a smoke test would have missed those completely. The automation was then built to match my test case document so everything is traceable back to a documented test case.
+Started by just using the app and breaking things. Found the swapped footer links that way, no script would have caught that 
+on a first pass. Then moved into boundary testing, pushed the numbers until things broke, and documented everything i found.
+Automation came last, built to match the manual findings.
 
-I left tests that hit real bugs as FAILING on purpose. Automation should reflect the truth of the system, not just show green to make everyone feel good.
+Tests that fail on bugs are left failing. Green doesnt always 
+mean good
 
 ## Known Bugs (7 Total)
 
 These match my PDF defect report. The tests below will fail intentionally.
 
-| ID | Issue | Severity |
-|---|---|---|
-| DEF-001 | Typo in page title, "Factoriall" | Low |
-| DEF-002 | Terms and Conditions link goes to /privacy | Medium |
-| DEF-003 | Privacy link goes to /terms | Medium |
-| DEF-004 | Negative numbers produce no response | High |
-| DEF-005 | Inputs 171 to 991 return Infinity | High |
-| DEF-006 | Inputs above 991 freeze the app | High |
-| DEF-007 | Legal pages show placeholder text | Low |
+| ID      | Issue                                           | Severity |
 
-## Engineering Notes
+| DEF-001 | Typo in page title, "Factoriall"                  | Low |
+| DEF-002 | Terms and Conditions link goes to /privacy     | Medium |
+| DEF-003 | Privacy link goes to /terms                      | Medium |
+| DEF-004 | Negative numbers produce no response             | High |
+| DEF-005 | Inputs 171 to 991 return Infinity                | High |
+| DEF-006 | Inputs above 991 freeze the app                 | High |
+| DEF-007 | Legal pages show placeholder text                | Low |
 
-**P4-01 Styling:** During manual testing i could see a red border appearing on the input field when invalid data is submitted. The problem is the app doesnt apply an explicit CSS class or aria-invalid attribute, its just browser-native validation styling. So the automated test cant detect it through computed styles. I kept it as a fail to flag it as an accessibility gap rather than pretend its fine.
+## Notes
 
-**Large Numbers:** Anything above 170 overflows to Infinity. In a real production app id use BigInt or return a proper value out of range message so the user actually knows whats happening.
+P4-01 Styling: During manual testing i could see a red border appearing on the input field when invalid data is submitted. The problem is the app doesnt apply an explicit CSS class or aria-invalid attribute, its just browser-native validation styling. So the automated test can't detect it through computed styles. I kept it as a fail to flag it as an accessibility gap rather than pretend its fine.
 
-**Negative Numbers:** Entering a negative number and clicking Calculate does nothing at all, no result, no error. The app should reject it with a clear message since factorial isnt defined for negative numbers.
+Large Numbers: Anything above 170 overflows to Infinity. In a real production app id use BigInt or return a proper value out of range message so the user actually knows whats happening.
+
+Negative Numbers: Entering a negative number and clicking Calculate does nothing at all, no result, no error. The app should reject it with a clear message since factorial isnt defined for negative numbers.
 
 ## Project Structure
 
@@ -61,8 +64,7 @@ factorial-calculator-tests/
 ```
 
 ## Tech Stack
-
-Framework: Playwright v1.44 (JavaScript)  
+Framework: Playwright v1.44 (JavaScript) 
 Runtime: Node.js v18  
 Browser: Chromium headless  
 Reports: HTML, List, JSON  
