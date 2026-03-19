@@ -2,13 +2,13 @@ const { test, expect } = require('@playwright/test');
 
 const BASE_URL = 'https://qainterview.pythonanywhere.com';
 
-// ─── TC-UI: User Interface and Navigation ────────────────────────────────────
+// TC-UI: User Interface and Navigation 
 
 test.describe('TC-UI - User Interface and Navigation', () => {
 
   test('TC-UI-001 | page title should not have a typo', async ({ page }) => {
     await page.goto(BASE_URL);
-    // DEF-001: tab shows "Factoriall" with double L — March 2026
+    // DEF-001: tab shows "Factoriall" with double L 
     await expect(page).toHaveTitle(/The greatest factorial calculator!/i);
   });
 
@@ -40,14 +40,14 @@ test.describe('TC-UI - User Interface and Navigation', () => {
   test('TC-UI-006 | terms and conditions link should go to /terms - DEF-002', async ({ page }) => {
     await page.goto(BASE_URL);
     await page.getByRole('link', { name: /terms and conditions/i }).click();
-    // DEF-002: link actually goes to /privacy — the two urls are swapped in the code
+    // DEF-002: link actually goes to /privacy — [the two urls are swapped in the code]
     await expect(page).toHaveURL(/\/terms/);
   });
 
   test('TC-UI-007 | privacy link should go to /privacy - DEF-003', async ({ page }) => {
     await page.goto(BASE_URL);
     await page.getByRole('link', { name: /^privacy$/i }).click();
-    // DEF-003: link actually goes to /terms — same swap issue as above
+    // DEF-003: link actually goes to /terms > same swap issue as above
     await expect(page).toHaveURL(/\/privacy/);
   });
 
@@ -59,7 +59,7 @@ test.describe('TC-UI - User Interface and Navigation', () => {
 
 });
 
-// ─── TC-FUNC: Factorial Calculations ─────────────────────────────────────────
+// TC-FUNC: Factorial Calculations 
 
 test.describe('TC-FUNC - Factorial Calculations', () => {
 
@@ -124,7 +124,7 @@ test.describe('TC-FUNC - Factorial Calculations', () => {
 
 });
 
-// ─── TC-VAL: Input Validation ─────────────────────────────────────────────────
+// TC-VAL: Input validation
 
 test.describe('TC-VAL - Input Validation', () => {
 
@@ -139,7 +139,7 @@ test.describe('TC-VAL - Input Validation', () => {
   }
 
   test('TC-VAL-001 | empty input should show an error message', async ({ page }) => {
-    // manually confirmed March 2026 — app shows "Please enter an integer"
+    // manually confirmed — app shows "Please enter an integer"
     const result = await submitInput(page, '');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
@@ -156,25 +156,25 @@ test.describe('TC-VAL - Input Validation', () => {
   });
 
   test('TC-VAL-003 | decimal input should show an error message', async ({ page }) => {
-    // manually confirmed — app shows "Please enter an integer"
+    // Manually confirmed — app shows "Please enter an integer"
     const result = await submitInput(page, '2.5');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
 
   test('TC-VAL-004 | letters in the input should show an error message', async ({ page }) => {
-    // manually confirmed — app shows "Please enter an integer"
+    // also manually confirmed — app shows "Please enter an integer"
     const result = await submitInput(page, 'abc');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
 
   test('TC-VAL-005 | special characters should show an error message', async ({ page }) => {
-    // manually confirmed — same error message comes up
+    // also manually confirmed — same error message comes up
     const result = await submitInput(page, '!@#');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
 
   test('TC-VAL-006 | spaces only should show an error message', async ({ page }) => {
-    // manually confirmed — treated as empty and shows the error
+    // Manually confirmed — treated as empty and shows the error
     const result = await submitInput(page, '   ');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
@@ -184,14 +184,14 @@ test.describe('TC-VAL - Input Validation', () => {
     await page.getByRole('button', { name: /calculate/i }).click();
     await page.waitForTimeout(800);
     const input = page.locator('input').first();
-    // red border confirmed visually during manual testing March 2026
+    // Red border confirmed visually during manual testing 
     const borderColor = await input.evaluate(el => window.getComputedStyle(el).borderColor);
     expect(borderColor).toBeTruthy();
   });
 
 });
 
-// ─── TC-API: API and Network ──────────────────────────────────────────────────
+// TC-API: API and Network 
 
 test.describe('TC-API - API and Network', () => {
 
@@ -202,7 +202,7 @@ test.describe('TC-API - API and Network', () => {
     await page.locator('input').first().fill('5');
     await page.getByRole('button', { name: /calculate/i }).click();
     await page.waitForTimeout(1500);
-    // confirmed in devtools — POST to /factorial, status 200 OK
+    // confirmed in devtools / POST to /factorial, status 200 OK
     const apiRequest = requests.find(r =>
       r.url().includes('factorial') || r.resourceType() === 'xhr'
     );
@@ -221,7 +221,7 @@ test.describe('TC-API - API and Network', () => {
       r.url().includes('factorial') || r.resourceType() === 'xhr'
     );
     expect(apiRequest).toBeTruthy();
-    // checked the headers in devtools — connection and content-length are present
+    // checked the headers in devtools >connection and content-length are present
     const headers = apiRequest.headers();
     const hasHeader =
       headers['accept'] !== undefined ||
