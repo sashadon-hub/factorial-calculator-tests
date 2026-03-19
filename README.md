@@ -4,19 +4,19 @@ Playwright automation suite built for the BitCube technical assessment (March 20
 
 ## Abbreviations used
 
-| TC | Test Case |
+| TC : Test Case |
 
-| UI | User Interface |
+| UI : User Interface |
 
-| FUNC | Functional |
+| FUNC : Functional |
 
-| VAL | Validation |
+| VAL : Validation |
 
-| API | Application Programming Interface |
+| API : Application Programming Interface |
 
-| DEF | Defect |
+| DEF :Defect |
 
-| P4 | Part 4 |
+| P4 : Part 4 |
 
 ## Setup
 
