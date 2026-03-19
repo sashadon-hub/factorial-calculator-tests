@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 const BASE_URL = 'https://qainterview.pythonanywhere.com';
 
-// part 4 - three additional test scenarios documented separately
+// part 4 — three additional test scenarios documented separately — March 2026
 
 test('P4-01 | input field should show error styling when validation fails', async ({ page }) => {
   await page.goto(BASE_URL);
@@ -18,8 +18,9 @@ test('P4-01 | input field should show error styling when validation fails', asyn
   const ariaInvalid = await input.getAttribute('aria-invalid');
   const classList = await input.evaluate(el => el.className);
 
-  // red border is visible manually but the browser handles it as a default style
-  // so the automated check cant pick it up through css or aria attributes
+  // the red border is visible manually but its browser-native validation styling
+  // the app doesnt set an explicit css class or aria-invalid attribute
+  // so this test fails — left as an honest fail to highlight the accessibility gap
   const hasErrorStyling =
     borderColor.includes('255, 0, 0')   ||
     borderColor.includes('220, 38, 38') ||
@@ -37,7 +38,7 @@ test('P4-02 | factorial of 12 should return 479001600', async ({ page }) => {
   await page.getByRole('button', { name: /calculate/i }).click();
   await page.waitForTimeout(1000);
 
-  // tested this manually and confirmed the result is correct
+  // tested manually March 2026 and confirmed the result is correct
   const bodyText = await page.locator('body').textContent();
   expect(bodyText).toContain('479001600');
 });
@@ -52,12 +53,12 @@ test('P4-03 | api call should go to the right endpoint with the correct data', a
   await page.getByRole('button', { name: /calculate/i }).click();
   await page.waitForTimeout(1500);
 
-  // looking for the xhr request that gets made when you click calculate
+  // looking for the xhr request made when you click calculate
   const apiRequest = requests.find(r =>
     r.url().includes('factorial') || r.resourceType() === 'xhr'
   );
 
-  // confirmed in devtools - POST to /factorial, status 200, number sent as payload
+  // confirmed in devtools March 2026 — POST to /factorial, status 200, number sent as payload
   expect(apiRequest).toBeTruthy();
   expect(apiRequest.url()).toContain('factorial');
 

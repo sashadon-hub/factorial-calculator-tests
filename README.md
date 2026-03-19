@@ -1,138 +1,71 @@
-# Factorial Calculator — QA Automation Suite
+# Factorial Calculator — QA Automation
 
-Playwright automation tests for the [Factorial Calculator](http://qainterview.pythonanywhere.com) application, submitted as part of the BitCube QA Engineer technical assessment.
+Playwright automation suite built for the BitCube technical assessment (March 2026).
 
----
+## Setup
+
+```bash
+npm install
+npx playwright install chromium
+npx playwright test
+```
+
+To run specific suites:
+
+```bash
+npm run test:main      # Part 3 only
+npm run test:part4     # Part 4 only
+npm run test:headed    # visible browser
+npm run report         # open HTML report
+```
+
+## My Approach
+
+I started with manual exploratory testing before writing any automation. That is how i caught the swapped footer links — a smoke test would have missed those completely. The automation was then built to match my test case document so everything is traceable back to a documented test case.
+
+I left tests that hit real bugs as FAILING on purpose. Automation should reflect the truth of the system, not just show green to make everyone feel good.
+
+## Known Bugs (7 Total)
+
+These match my PDF defect report. The tests below will fail intentionally.
+
+| ID | Issue | Severity |
+|---|---|---|
+| DEF-001 | Typo in page title, "Factoriall" | Low |
+| DEF-002 | Terms and Conditions link goes to /privacy | Medium |
+| DEF-003 | Privacy link goes to /terms | Medium |
+| DEF-004 | Negative numbers produce no response | High |
+| DEF-005 | Inputs 171 to 991 return Infinity | High |
+| DEF-006 | Inputs above 991 freeze the app | High |
+| DEF-007 | Legal pages show placeholder text | Low |
+
+## Engineering Notes
+
+**P4-01 Styling:** During manual testing i could see a red border appearing on the input field when invalid data is submitted. The problem is the app doesnt apply an explicit CSS class or aria-invalid attribute, its just browser-native validation styling. So the automated test cant detect it through computed styles. I kept it as a fail to flag it as an accessibility gap rather than pretend its fine.
+
+**Large Numbers:** Anything above 170 overflows to Infinity. In a real production app id use BigInt or return a proper value out of range message so the user actually knows whats happening.
+
+**Negative Numbers:** Entering a negative number and clicking Calculate does nothing at all, no result, no error. The app should reject it with a clear message since factorial isnt defined for negative numbers.
 
 ## Project Structure
 
 ```
 factorial-calculator-tests/
 ├── tests/
-│   ├── factorial.spec.js        # Part 3 — Main test suite (UI, Functional, Validation)
+│   ├── factorial.spec.js        # Part 3, main suite
 │   └── part4/
-│       └── additional.spec.js   # Part 4 — Additional tests (Styling, Factorial 12, API)
+│       └── additional.spec.js   # Part 4, additional scenarios
 ├── playwright.config.js
 ├── package.json
 └── README.md
 ```
 
----
+## Tech Stack
 
-## Requirements
-
-- [Node.js](https://nodejs.org/) v18 or higher
-- npm v9 or higher
-
----
-
-## Setup
-
-**1. Clone the repository**
-
-```bash
-git clone https://github.com/<your-username>/factorial-calculator-tests.git
-cd factorial-calculator-tests
-```
-
-**2. Install dependencies**
-
-```bash
-npm install
-```
-
-**3. Install Playwright browsers**
-
-```bash
-npx playwright install chromium
-```
-
----
-
-## Running Tests
-
-### Run all tests (Part 3 + Part 4)
-
-```bash
-npm test
-```
-
-### Run Part 3 only (main test suite)
-
-```bash
-npm run test:main
-```
-
-### Run Part 4 only (additional tests)
-
-```bash
-npm run test:part4
-```
-
-### Run in headed mode (visible browser)
-
-```bash
-npm run test:headed
-```
-
-### View HTML report after a run
-
-```bash
-npm run report
-```
-
----
-
-## Test Coverage
-
-### Part 3 — Main Suite (`tests/factorial.spec.js`)
-
-| Suite | Test Cases |
-|---|---|
-| TC-UI — UI & Navigation | 8 tests |
-| TC-FUNC — Factorial Calculations | 6 tests |
-| TC-VAL — Input Validation | 5 tests |
-
-### Part 4 — Additional Tests (`tests/part4/additional.spec.js`)
-
-| ID | Description |
-|---|---|
-| P4-01 | Form validation styling applied on invalid submission |
-| P4-02 | Factorial of 12 returns 479001600 |
-| P4-03 | API call is made with correct headers and parameters |
-
----
-
-## Known Bugs (Documented Defects)
-
-The following tests are expected to **fail** due to intentional bugs in the application. This is by design — the tests document the defects rather than masking them.
-
-| Test | Defect ID | Description |
-|---|---|---|
-| TC-UI-001 | DEF-001 | Page title has typo ("Factoriall") |
-| TC-UI-006 | DEF-002 | Terms & Conditions link routes to /privacy |
-| TC-UI-007 | DEF-003 | Privacy link routes to /terms |
-| TC-UI-008 | DEF-004 | Copyright year range incomplete |
-| TC-FUNC-006 | DEF-009 | Input of 1000 returns "Infinity" |
-| TC-VAL-001 | DEF-007 | Empty input produces no validation error |
-| TC-VAL-002 | DEF-005 | Negative integer not rejected |
-| TC-VAL-003 | DEF-006 | Decimal input not rejected |
-| TC-VAL-004 | DEF-008 | Alphabetical input not rejected |
-| TC-VAL-005 | DEF-008 | Special character input not rejected |
-| P4-01 | DEF-007 | No error styling applied on invalid input |
-
----
-
-## Technology
-
-- **Framework:** [Playwright](https://playwright.dev/) v1.44+
-- **Language:** JavaScript (CommonJS)
-- **Browser:** Chromium (headless by default)
-- **Application Under Test:** http://qainterview.pythonanywhere.com
-
----
-
-## Author
+Framework: Playwright v1.44 (JavaScript)  
+Runtime: Node.js v18  
+Browser: Chromium headless  
+Reports: HTML, List, JSON  
 
 **Sasha Jinkila** — QA Automation Engineer  
-Submitted for BitCube QA Technical Assessment
+BitCube Technical Assessment, March 2026

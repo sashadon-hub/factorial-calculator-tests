@@ -2,13 +2,13 @@ const { test, expect } = require('@playwright/test');
 
 const BASE_URL = 'https://qainterview.pythonanywhere.com';
 
-// UI tests - checking the page looks and behaves correctly
+// ─── TC-UI: User Interface and Navigation ────────────────────────────────────
 
 test.describe('TC-UI - User Interface and Navigation', () => {
 
   test('TC-UI-001 | page title should not have a typo', async ({ page }) => {
     await page.goto(BASE_URL);
-    // the tab shows "Factoriall" with a double L, logged as DEF-001
+    // DEF-001: tab shows "Factoriall" with double L — March 2026
     await expect(page).toHaveTitle(/The greatest factorial calculator!/i);
   });
 
@@ -40,14 +40,14 @@ test.describe('TC-UI - User Interface and Navigation', () => {
   test('TC-UI-006 | terms and conditions link should go to /terms - DEF-002', async ({ page }) => {
     await page.goto(BASE_URL);
     await page.getByRole('link', { name: /terms and conditions/i }).click();
-    // this one fails - link takes you to /privacy instead, the urls are swapped
+    // DEF-002: link actually goes to /privacy — the two urls are swapped in the code
     await expect(page).toHaveURL(/\/terms/);
   });
 
   test('TC-UI-007 | privacy link should go to /privacy - DEF-003', async ({ page }) => {
     await page.goto(BASE_URL);
     await page.getByRole('link', { name: /^privacy$/i }).click();
-    // same issue, this one takes you to /terms instead of /privacy
+    // DEF-003: link actually goes to /terms — same swap issue as above
     await expect(page).toHaveURL(/\/privacy/);
   });
 
@@ -59,7 +59,7 @@ test.describe('TC-UI - User Interface and Navigation', () => {
 
 });
 
-// functional tests - making sure the calculations come back correct
+// ─── TC-FUNC: Factorial Calculations ─────────────────────────────────────────
 
 test.describe('TC-FUNC - Factorial Calculations', () => {
 
@@ -97,14 +97,14 @@ test.describe('TC-FUNC - Factorial Calculations', () => {
   });
 
   test('TC-FUNC-006 | factorial of 100 should return a valid result', async ({ page }) => {
+    // 100 is a valid input, result should not be Infinity or blank
     const result = await calculate(page, 100);
-    // 100 is valid, should not come back as Infinity or blank
     expect(result).not.toContain('Infinity');
     expect(result).not.toContain('undefined');
   });
 
-  test('TC-FUNC-007 | input 171 returns Infinity instead of a real result - DEF-005', async ({ page }) => {
-    // anything from 171 to 991 gives back Infinity, logged as DEF-005
+  test('TC-FUNC-007 | input 171 returns Infinity instead of real result - DEF-005', async ({ page }) => {
+    // DEF-005: anything from 171 to 991 gives back Infinity, floating point overflow
     const result = await calculate(page, 171);
     expect(result).not.toContain('Infinity');
   });
@@ -115,7 +115,7 @@ test.describe('TC-FUNC - Factorial Calculations', () => {
     await page.getByRole('button', { name: /calculate/i }).click();
     await page.waitForTimeout(1000);
     const bodyText = await page.locator('body').textContent();
-    // nothing happens at all when you submit 992, no result no error, logged as DEF-006
+    // DEF-006: nothing happens at all when you submit 992, no result no error
     const hasResponse = bodyText.toLowerCase().includes('factorial') ||
                         bodyText.toLowerCase().includes('please') ||
                         bodyText.toLowerCase().includes('error');
@@ -124,7 +124,7 @@ test.describe('TC-FUNC - Factorial Calculations', () => {
 
 });
 
-// validation tests - checking the app handles bad inputs properly
+// ─── TC-VAL: Input Validation ─────────────────────────────────────────────────
 
 test.describe('TC-VAL - Input Validation', () => {
 
@@ -139,7 +139,7 @@ test.describe('TC-VAL - Input Validation', () => {
   }
 
   test('TC-VAL-001 | empty input should show an error message', async ({ page }) => {
-    // manually confirmed, app shows "Please enter an integer"
+    // manually confirmed March 2026 — app shows "Please enter an integer"
     const result = await submitInput(page, '');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
@@ -151,30 +151,30 @@ test.describe('TC-VAL - Input Validation', () => {
     await page.getByRole('button', { name: /calculate/i }).click();
     await page.waitForTimeout(800);
     const after = await page.locator('body').textContent();
-    // nothing happens when you enter a negative number, no msg no result, logged DEF-004
+    // DEF-004: nothing happens, page does not change at all
     expect(after).not.toEqual(before);
   });
 
   test('TC-VAL-003 | decimal input should show an error message', async ({ page }) => {
-    // manually tested, app shows "Please enter an integer"
+    // manually confirmed — app shows "Please enter an integer"
     const result = await submitInput(page, '2.5');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
 
   test('TC-VAL-004 | letters in the input should show an error message', async ({ page }) => {
-    // manually tested, app shows "Please enter an integer"
+    // manually confirmed — app shows "Please enter an integer"
     const result = await submitInput(page, 'abc');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
 
   test('TC-VAL-005 | special characters should show an error message', async ({ page }) => {
-    // manually tested, same error message comes up
+    // manually confirmed — same error message comes up
     const result = await submitInput(page, '!@#');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
 
   test('TC-VAL-006 | spaces only should show an error message', async ({ page }) => {
-    // manually tested, treated as empty and shows the error
+    // manually confirmed — treated as empty and shows the error
     const result = await submitInput(page, '   ');
     expect(result.toLowerCase()).toMatch(/please|enter|integer|valid/);
   });
@@ -184,51 +184,45 @@ test.describe('TC-VAL - Input Validation', () => {
     await page.getByRole('button', { name: /calculate/i }).click();
     await page.waitForTimeout(800);
     const input = page.locator('input').first();
-    // red border shows up visually, confirmed during manual testing
+    // red border confirmed visually during manual testing March 2026
     const borderColor = await input.evaluate(el => window.getComputedStyle(el).borderColor);
     expect(borderColor).toBeTruthy();
   });
 
 });
 
-// api tests - checking the network request is made correctly
+// ─── TC-API: API and Network ──────────────────────────────────────────────────
 
 test.describe('TC-API - API and Network', () => {
 
-  test('TC-API-001 | XHR request should be made to the factorial endpoint', async ({ page }) => {
+  test('TC-API-001 | XHR POST request should be made to the factorial endpoint', async ({ page }) => {
     await page.goto(BASE_URL);
-
     const requests = [];
     page.on('request', r => requests.push(r));
-
     await page.locator('input').first().fill('5');
     await page.getByRole('button', { name: /calculate/i }).click();
     await page.waitForTimeout(1500);
-
+    // confirmed in devtools — POST to /factorial, status 200 OK
     const apiRequest = requests.find(r =>
       r.url().includes('factorial') || r.resourceType() === 'xhr'
     );
-    // confirmed in devtools, POST request goes to /factorial with 200 response
     expect(apiRequest).toBeTruthy();
     expect(apiRequest.url()).toContain('factorial');
   });
 
   test('TC-API-002 | request should include the expected headers', async ({ page }) => {
     await page.goto(BASE_URL);
-
     const requests = [];
     page.on('request', r => requests.push(r));
-
     await page.locator('input').first().fill('5');
     await page.getByRole('button', { name: /calculate/i }).click();
     await page.waitForTimeout(1500);
-
     const apiRequest = requests.find(r =>
       r.url().includes('factorial') || r.resourceType() === 'xhr'
     );
     expect(apiRequest).toBeTruthy();
+    // checked the headers in devtools — connection and content-length are present
     const headers = apiRequest.headers();
-    // checked the headers in devtools, connection and content-length are there
     const hasHeader =
       headers['accept'] !== undefined ||
       headers['content-type'] !== undefined ||
@@ -238,19 +232,16 @@ test.describe('TC-API - API and Network', () => {
 
   test('TC-API-003 | request should send the number as the payload', async ({ page }) => {
     await page.goto(BASE_URL);
-
     const requests = [];
     page.on('request', r => requests.push(r));
-
     await page.locator('input').first().fill('12');
     await page.getByRole('button', { name: /calculate/i }).click();
     await page.waitForTimeout(1500);
-
     const apiRequest = requests.find(r =>
       r.url().includes('factorial') || r.resourceType() === 'xhr'
     );
     expect(apiRequest).toBeTruthy();
-    // confirmed in devtools payload tab, number 12 goes through correctly
+    // confirmed in devtools payload tab — number 12 goes through correctly
     const postData = apiRequest.postData();
     expect(postData).toContain('12');
   });
