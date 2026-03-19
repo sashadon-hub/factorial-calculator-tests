@@ -1,6 +1,16 @@
-# Factorial Calculator — QA Automation
+# Factorial Calculator QA Automation
 
 Playwright automation suite built for the BitCube technical assessment (March 2026).
+
+## Abbreviations used
+
+| TC | Test Case |
+| UI | User Interface |
+| FUNC | Functional |
+| VAL | Validation |
+| API | Application Programming Interface |
+| DEF | Defect |
+| P4 | Part 4 |
 
 ## Setup
 
