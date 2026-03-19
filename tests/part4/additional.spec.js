@@ -2,13 +2,13 @@ const { test, expect } = require('@playwright/test');
 
 const BASE_URL = 'https://qainterview.pythonanywhere.com';
 
-// part 4 — three additional test scenarios documented separately — March 2026
+// Part 4 > three additional test scenarios documented separately 
 
 test('P4-01 | input field should show error styling when validation fails', async ({ page }) => {
   await page.goto(BASE_URL);
   const input = page.locator('input').first();
 
-  // click calculate without entering anything to trigger validation
+  // Click calculate without entering anything to trigger validation
   await page.getByRole('button', { name: /calculate/i }).click();
   await page.waitForTimeout(800);
 
@@ -20,7 +20,7 @@ test('P4-01 | input field should show error styling when validation fails', asyn
 
   // the red border is visible manually but its browser-native validation styling
   // the app doesnt set an explicit css class or aria-invalid attribute
-  // so this test fails — left as an honest fail to highlight the accessibility gap
+  // so this test fails left as an honest fail to highlight the accessibility gap
   const hasErrorStyling =
     borderColor.includes('255, 0, 0')   ||
     borderColor.includes('220, 38, 38') ||
@@ -38,7 +38,7 @@ test('P4-02 | factorial of 12 should return 479001600', async ({ page }) => {
   await page.getByRole('button', { name: /calculate/i }).click();
   await page.waitForTimeout(1000);
 
-  // tested manually March 2026 and confirmed the result is correct
+  // tested manually and confirmed the result is correct
   const bodyText = await page.locator('body').textContent();
   expect(bodyText).toContain('479001600');
 });
@@ -53,12 +53,12 @@ test('P4-03 | api call should go to the right endpoint with the correct data', a
   await page.getByRole('button', { name: /calculate/i }).click();
   await page.waitForTimeout(1500);
 
-  // looking for the xhr request made when you click calculate
+  // Looking for the xhr request made when you click calculate
   const apiRequest = requests.find(r =>
     r.url().includes('factorial') || r.resourceType() === 'xhr'
   );
 
-  // confirmed in devtools March 2026 — POST to /factorial, status 200, number sent as payload
+  // confirmed in devtools  POST to /factorial, status 200, number sent as payload, i also attached screenshots in test case pdf
   expect(apiRequest).toBeTruthy();
   expect(apiRequest.url()).toContain('factorial');
 
