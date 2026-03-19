@@ -21,7 +21,7 @@ npm run report         # open HTML report
 
 ## My Approach
 
-I started with manual exploratory testing before writing any automation. That is how i caught the swapped footer links — a smoke test would have missed those completely. The automation was then built to match my test case document so everything is traceable back to a documented test case.
+I started with manual exploratory testing before writing any automation. That is how i caught the swapped footer links a smoke test would have missed those completely. The automation was then built to match my test case document so everything is traceable back to a documented test case.
 
 I left tests that hit real bugs as FAILING on purpose. Automation should reflect the truth of the system, not just show green to make everyone feel good.
 
